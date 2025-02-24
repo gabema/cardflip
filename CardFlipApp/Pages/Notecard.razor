@@ -1,0 +1,58 @@
+﻿@page "/notecard"
+@using System.Text.Json
+@inject IJSRuntime JS
+
+<h3>Notecard</h3>
+
+<div class="notecard @(isFlipped ? "flipped" : "")" @onclick="FlipCard">
+    <div class="front">
+        @wordPairs[index].Front
+    </div>
+    <div class="back">
+        @wordPairs[index].Back
+    </div>
+</div>
+
+@code {
+    // private WordPair currentWordPair = new WordPair { Front = "Hello", Back = "World" };
+    private WordPair[] wordPairs =
+    {
+        new WordPair { Front = "Hello", Back = "World" },
+        new WordPair { Front = "Goodbye", Back = "World" },
+        new WordPair { Front = "Goodnight", Back = "Moon" }
+    };
+    private bool isFlipped = false;
+    private int index = 0;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var json = await JS.InvokeAsync<string>("localStorage.getItem", "wordPairs");
+        if (json is null) { return; }
+        var newWordPairs = JsonSerializer.Deserialize<WordPair[]>(json);
+        if (newWordPairs != null && newWordPairs.Length > 0)
+        {
+            wordPairs = newWordPairs;
+        }
+    }
+
+    private void FlipCard()
+    {
+        if (isFlipped)
+        {
+            NextCard();
+        }
+
+        isFlipped = !isFlipped;
+    }
+
+    private void NextCard()
+    {
+        index = ++index % wordPairs.Length;
+    }
+
+    public class WordPair
+    {
+        public string Front { get; set; } = string.Empty;
+        public string Back { get; set; } = string.Empty;
+    }
+}
