@@ -5,21 +5,22 @@
 <h3>Notecard</h3>
 
 <div class="notecard @(isFlipped ? "flipped" : "")" @onclick="FlipCard">
-    <div class="front">
+    <div class="front" lang="@wordPairs[index].FrontLang">
         @wordPairs[index].Front
     </div>
-    <div class="back">
+    <div class="back" lang="@wordPairs[index].BackLang">
         @wordPairs[index].Back
     </div>
 </div>
 
 @code {
-    // private WordPair currentWordPair = new WordPair { Front = "Hello", Back = "World" };
     private WordPair[] wordPairs =
     {
-        new WordPair { Front = "Hello", Back = "World" },
-        new WordPair { Front = "Goodbye", Back = "World" },
-        new WordPair { Front = "Goodnight", Back = "Moon" }
+        new WordPair { Front = "Good morning", FrontLang = "en", Back = "Tere hommikust", BackLang="et" },
+        new WordPair { Front = "Restroom please", FrontLang = "en", Back = "Palun tualettruum", BackLang="et" },
+        new WordPair { Front = "English please", FrontLang = "en", Back = "Inglise palun", BackLang="et" },
+        new WordPair { Front = "Good day", FrontLang = "en", Back = "Tere päevast", BackLang="et" },
+        new WordPair { Front = "Bill please", FrontLang = "en", Back = "Palun arve", BackLang="et" },
     };
     private bool isFlipped = false;
     private int index = 0;
@@ -53,6 +54,8 @@
     public class WordPair
     {
         public string Front { get; set; } = string.Empty;
+        public string FrontLang { get; set; } = "en";
         public string Back { get; set; } = string.Empty;
+        public string BackLang { get; set; } = "en";
     }
 }
