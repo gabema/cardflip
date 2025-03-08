@@ -1,0 +1,10 @@
+{
+  "background_color": "#ffffff",
+  "description": "CardFlip",
+  "display": "standalone",
+  "name": "CardFlip",
+  "short_name": "CardFlip",
+  "start_url": "/index.html",
+  "theme_color": "#ffffff",
+  "scope": "/"
+}
