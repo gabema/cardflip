@@ -82,8 +82,11 @@ jobs:
       - name: Publish WebAssembly Project
         run: dotnet publish ./CardFlip/CardFlip.csproj -c Release -f net8.0-browserwasm -o ./publish
 
-      - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./publish
+          path: ./publish/wwwroot
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
