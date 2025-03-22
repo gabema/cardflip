@@ -58,3 +58,32 @@ jobs:
       - name: Run Unit Tests
         shell: pwsh
         run: dotnet test ./CardFlip.Tests/CardFlip.Tests.csproj --no-build -c Release --logger GitHubActions --blame-crash --collect:"XPlat Code Coverage" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover
+
+  build_and_deploy:
+    name: Build and Deploy WebAssembly
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/heads/release/')
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Install Dependencies
+        run: dotnet restore ./CardFlip/CardFlip.csproj
+
+      - name: Build WASM (Release)
+        run: dotnet build ./CardFlip/CardFlip.csproj -c Release -f net8.0-browserwasm
+
+      - name: Publish WebAssembly Project
+        run: dotnet publish ./CardFlip/CardFlip.csproj -c Release -o -f net8.0-browserwasm  ./publish
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./publish/wwwroot
