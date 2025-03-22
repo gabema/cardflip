@@ -14,6 +14,12 @@ on:
 env:
   STEP_TIMEOUT_MINUTES: 60
 
+# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
 jobs:
   smoke_test:
     name: Smoke Test (Debug Build of CardFlip)
@@ -63,9 +69,6 @@ jobs:
     name: Build and Deploy WebAssembly
     runs-on: ubuntu-latest
     if: startsWith(github.ref, 'refs/heads/release/')
-    permissions:
-      id-token: write
-      contents: read
     steps:
       - uses: actions/checkout@v3
         with:
